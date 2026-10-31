@@ -1,0 +1,17 @@
+[build]
+  command = "npm install"
+  publish = "public"
+
+[deploy]
+  startCommand = "npm start"
+
+[[services]]
+  type = "web"
+  name = "gustoai"
+  runtime = "node"
+  startCommand = "npm start"
+  healthCheckPath = "/health"
+
+  [services.envVars]
+    NODE_ENV = "production"
+    PORT = "3000"

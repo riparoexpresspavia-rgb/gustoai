@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GustoAI — Il Chatbot AI per il tuo Ristorante</title>
+  <meta name="description" content="GustoAI: L'assistente AI che risponde ai tuoi clienti 24/7, gestisce prenotazioni e aumenta le vendite del tuo ristorante. Prova gratis 14 giorni." />
+  <meta property="og:title" content="GustoAI — Chatbot AI per Ristoranti" />
+  <meta property="og:description" content="Rispondi ai clienti 24/7, gestisci prenotazioni, aumenta le prenotazioni con l'AI." />
+  <meta property="og:image" content="/og-image.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══════════════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">🍽️</span>
+      <span class="logo-text">GustoAI</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Funzionalità</a>
+      <a href="#how-it-works">Come funziona</a>
+      <a href="#pricing">Prezzi</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#pricing" class="btn btn-outline">Vedi prezzi</a>
+      <a href="#demo" class="btn btn-primary">Demo gratis</a>
+    </div>
+    <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features" onclick="toggleMenu()">Funzionalità</a>
+    <a href="#pricing" onclick="toggleMenu()">Prezzi</a>
+    <a href="#demo" onclick="toggleMenu()">Demo gratis</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="container hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      🚀 Nuovo · AI powered da GPT-4o
+    </div>
+    <h1 class="hero-title">
+      Il tuo ristorante risponde<br/>
+      <span class="gradient-text">24 ore su 24, 7 giorni su 7</span>
+    </h1>
+    <p class="hero-subtitle">
+      GustoAI è l'assistente intelligente che risponde ai clienti, 
+      gestisce prenotazioni e promuove il tuo menù — <strong>anche quando sei chiuso</strong>.
+      Installalo in 5 minuti, senza saper programmare.
+    </p>
+    <div class="hero-cta-group">
+      <a href="#pricing" class="btn btn-primary btn-xl">
+        Inizia gratis 14 giorni →
+      </a>
+      <a href="#demo" class="btn btn-ghost btn-xl">
+        ▶ Vedi demo live
+      </a>
+    </div>
+    <div class="hero-social-proof">
+      <div class="proof-avatars">
+        <div class="avatar" style="background:#f39c12">🍕</div>
+        <div class="avatar" style="background:#27ae60">🍝</div>
+        <div class="avatar" style="background:#8e44ad">🍣</div>
+        <div class="avatar" style="background:#e74c3c">🥩</div>
+      </div>
+      <p>Già usato da <strong>+200 ristoratori</strong> in Italia</p>
+    </div>
+  </div>
+  <!-- Widget Preview -->
+  <div class="hero-widget-preview">
+    <div class="mock-browser">
+      <div class="mock-browser-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="url-bar">www.tuoristorante.it</span>
+      </div>
+      <div class="mock-browser-content">
+        <div class="mock-site-content">
+          <div class="mock-hero-text">Benvenuti da</div>
+          <div class="mock-hero-title">La Bella Italia</div>
+          <div class="mock-menu-items">
+            <div class="mock-item">🍝 Carbonara</div>
+            <div class="mock-item">🥩 Bistecca</div>
+          </div>
+        </div>
+        <!-- Chat widget simulato -->
+        <div class="widget-preview" id="widgetPreview">
+          <div class="widget-bubble" id="widgetBubble" onclick="openWidgetDemo()">
+            <span>💬</span>
+            <div class="widget-notification">1</div>
+          </div>
+          <div class="widget-window" id="widgetWindow" style="display:none">
+            <div class="widget-header">
+              <div class="widget-avatar">🍽️</div>
+              <div>
+                <div class="widget-name">GustoBot</div>
+                <div class="widget-status">● Online ora</div>
+              </div>
+              <button class="widget-close" onclick="closeWidgetDemo()">✕</button>
+            </div>
+            <div class="widget-messages" id="widgetMessages">
+              <div class="msg bot">
+                <span>Ciao! 👋 Sono GustoBot di <strong>La Bella Italia</strong>. Come posso aiutarti?</span>
+              </div>
+            </div>
+            <div class="widget-quick-replies" id="quickReplies">
+              <button onclick="sendQuick('Vedi il menù')">🍽️ Vedi menù</button>
+              <button onclick="sendQuick('Voglio prenotare')">📅 Prenota</button>
+              <button onclick="sendQuick('Orari di apertura')">🕐 Orari</button>
+            </div>
+            <div class="widget-input-area">
+              <input type="text" id="widgetInput" placeholder="Scrivi un messaggio..." 
+                     onkeydown="if(event.key==='Enter') sendMessage()" />
+              <button onclick="sendMessage()">➤</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS BAR ══════════════════════════════════════════════════════════════ -->
+<section class="stats-bar">
+  <div class="container stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Sempre disponibile</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">5 min</div>
+      <div class="stat-label">Per iniziare</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">+40%</div>
+      <div class="stat-label">Prenotazioni medie</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">€0</div>
+      <div class="stat-label">Costo setup</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ══════════════════════════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">✨ Funzionalità</div>
+      <h2>Tutto quello che serve al tuo ristorante</h2>
+      <p>GustoAI non è un semplice chatbot. È un vero assistente AI addestrato sulla ristorazione italiana.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card feature-card--large">
+        <div class="feature-icon">🤖</div>
+        <h3>Risponde in modo intelligente</h3>
+        <p>L'AI conosce il tuo menù, i tuoi orari e le specialità della casa. Risponde come farebbe un cameriere esperto, 24 ore su 24.</p>
+        <ul class="feature-list">
+          <li>✓ Risponde a domande su piatti e ingredienti</li>
+          <li>✓ Gestisce richieste di allergie e diete</li>
+          <li>✓ Consiglia abbinamenti vino-cibo</li>
+        </ul>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Gestisce le prenotazioni</h3>
+        <p>Raccoglie dati del cliente e li inoltra a te via email o WhatsApp in tempo reale.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Social Media integrato</h3>
+        <p>Rimanda i clienti al tuo Instagram e Facebook, promuove eventi speciali e nuovi piatti.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3>Personalizzato al 100%</h3>
+        <p>Colori, nome, menù, orari: tutto adattato alla tua identità. Installi con 1 riga di codice.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Dashboard Analytics</h3>
+        <p>Vedi quante persone chattano, quali domande fanno di più, quali piatti attirano più interesse.</p>
+      </div>
+      <div class="feature-card feature-card--highlight">
+        <div class="feature-icon">🇮🇹</div>
+        <h3>Fatto per i ristoratori italiani</h3>
+        <p>Risponde in italiano perfetto, conosce la cultura culinaria italiana e i termini del settore.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ══════════════════════════════════════════════════════════ -->
+<section class="how-it-works" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">⚡ Semplice</div>
+      <h2>Attivo in 5 minuti</h2>
+      <p>Nessun tecnico necessario. Se sai usare WhatsApp, sai usare GustoAI.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Registrati e personalizza</h3>
+          <p>Inserisci il nome del ristorante, orari, menù e colori del brand. Ci vogliono 3 minuti.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Copia 1 riga di codice</h3>
+          <p>Ti diamo un piccolo snippet da incollare nel tuo sito. Se non hai un tecnico, lo facciamo noi gratis.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>GustoAI lavora per te</h3>
+          <p>Da quel momento risponde ai clienti, raccoglie prenotazioni e promuove il tuo locale — H24.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOCIAL PROOF ══════════════════════════════════════════════════════════ -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">⭐ Recensioni</div>
+      <h2>I ristoratori lo amano</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"Da quando ho installato GustoAI, ricevo il 30% in più di prenotazioni online. I clienti chiedono del menù anche a mezzanotte!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#e74c3c">M</div>
+          <div>
+            <div class="author-name">Marco Rossi</div>
+            <div class="author-role">Ristorante Da Marco, Milano</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"Ho messo il link su Instagram Stories e in un weekend GustoAI ha risposto a 150 messaggi! Io stavo dormendo."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#8e44ad">S</div>
+          <div>
+            <div class="author-name">Sofia Conti</div>
+            <div class="author-role">Osteria Bella Napoli, Napoli</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>"Setup in 4 minuti, zero costi di tecnico. Per €49 al mese risparmio 2 ore di telefonate al giorno. Impagabile."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#27ae60">L</div>
+          <div>
+            <div class="author-name">Luca Bianchi</div>
+            <div class="author-role">Pizzeria Vesuvio, Roma</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DEMO LIVE ═════════════════════════════════════════════════════════════ -->
+<section class="demo-section" id="demo">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">🎯 Demo Live</div>
+      <h2>Prova GustoAI ora, è gratis</h2>
+      <p>Parla con un chatbot di demo già configurato. Nessuna registrazione.</p>
+    </div>
+    <div class="demo-container">
+      <div class="demo-chat" id="demoChat">
+        <div class="demo-chat-header">
+          <div class="demo-avatar">🍽️</div>
+          <div>
+            <div class="demo-name">GustoBot — Demo</div>
+            <div class="demo-status">● Attivo ora</div>
+          </div>
+        </div>
+        <div class="demo-messages" id="demoMessages">
+          <div class="demo-msg bot">
+            Ciao! 👋 Sono GustoBot di <strong>La Bella Italia</strong>! Posso aiutarti con informazioni sul menù, prenotazioni e orari. Cosa ti posso dire?
+          </div>
+        </div>
+        <div class="demo-quick-replies">
+          <button onclick="demoSend('Che piatti avete?')">🍝 Che piatti avete?</button>
+          <button onclick="demoSend('Voglio prenotare un tavolo')">📅 Voglio prenotare</button>
+          <button onclick="demoSend('Siete aperti domenica?')">🕐 Orari apertura</button>
+          <button onclick="demoSend('Avete piatti vegani?')">🌿 Piatti vegani</button>
+        </div>
+        <div class="demo-input-row">
+          <input type="text" id="demoInput" placeholder="Scrivi qualcosa..." 
+                 onkeydown="if(event.key==='Enter') demoSend()" />
+          <button class="demo-send-btn" onclick="demoSend()">➤</button>
+        </div>
+      </div>
+      <div class="demo-info">
+        <h3>Questo è il tuo futuro assistente</h3>
+        <ul class="demo-info-list">
+          <li>🧠 Conosce tutto il tuo menù</li>
+          <li>📅 Gestisce le prenotazioni</li>
+          <li>🌙 Lavora anche di notte</li>
+          <li>📱 Funziona su mobile</li>
+          <li>🇮🇹 Parla italiano perfetto</li>
+          <li>🎨 Colori del tuo brand</li>
+        </ul>
+        <a href="#pricing" class="btn btn-primary btn-lg">Attiva il tuo GustoBot →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══════════════════════════════════════════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">💰 Prezzi</div>
+      <h2>Semplice, trasparente, senza sorprese</h2>
+      <p>14 giorni gratuiti, poi scegli il piano più adatto. Disdici quando vuoi.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Piano Base -->
+      <div class="pricing-card">
+        <div class="plan-name">Piano Base</div>
+        <div class="plan-price">
+          <span class="currency">€</span>49
+          <span class="period">/mese</span>
+        </div>
+        <div class="plan-desc">Perfetto per un singolo ristorante</div>
+        <ul class="plan-features">
+          <li>✓ 1 chatbot personalizzato</li>
+          <li>✓ AI GPT-4o-mini</li>
+          <li>✓ Widget sito web</li>
+          <li>✓ 500 messaggi/mese</li>
+          <li>✓ Dashboard analytics</li>
+          <li>✓ Supporto email</li>
+          <li class="disabled">✗ Integrazione WhatsApp</li>
+          <li class="disabled">✗ Più chatbot</li>
+        </ul>
+        <button class="btn btn-outline btn-block" onclick="startCheckout('basic')">
+          Inizia gratis 14 giorni
+        </button>
+      </div>
+
+      <!-- Piano Pro (consigliato) -->
+      <div class="pricing-card pricing-card--featured">
+        <div class="plan-badge">⭐ Più scelto</div>
+        <div class="plan-name">Piano Pro</div>
+        <div class="plan-price">
+          <span class="currency">€</span>99
+          <span class="period">/mese</span>
+        </div>
+        <div class="plan-desc">Per chi vuole il massimo</div>
+        <ul class="plan-features">
+          <li>✓ 3 chatbot personalizzati</li>
+          <li>✓ AI GPT-4o (il migliore)</li>
+          <li>✓ Widget sito web</li>
+          <li>✓ Messaggi illimitati</li>
+          <li>✓ Dashboard analytics avanzata</li>
+          <li>✓ Integrazione WhatsApp</li>
+          <li>✓ Supporto prioritario</li>
+          <li>✓ Setup gratuito assistito</li>
+        </ul>
+        <button class="btn btn-primary btn-block" onclick="startCheckout('pro')">
+          Inizia gratis 14 giorni
+        </button>
+      </div>
+    </div>
+    <div class="pricing-guarantee">
+      🔒 Pagamento sicuro · 🔄 Disdici quando vuoi · 📞 Supporto in italiano
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ════════════════════════════════════════════════════════════════════ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">❓ FAQ</div>
+      <h2>Domande frequenti</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Ho bisogno di un tecnico per installarlo? <span>+</span>
+        </button>
+        <div class="faq-a">No! Ti diamo 1 riga di codice da incollare sul tuo sito. Se il tuo sito è su WordPress, Wix, Squarespace o qualsiasi piattaforma, funziona. Se hai difficoltà, il nostro team lo installa gratis per te.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Funziona sui social media? <span>+</span>
+        </button>
+        <div class="faq-a">Il widget si installa sul tuo sito. Puoi promuoverlo su Instagram, Facebook, TikTok con un link diretto. Il Piano Pro include l'integrazione WhatsApp per rispondere anche lì.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Posso personalizzare le risposte? <span>+</span>
+        </button>
+        <div class="faq-a">Sì! Inserisci il tuo menù completo, gli orari, le specialità, le promozioni. Il chatbot risponde basandosi sui tuoi dati reali.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Posso disdire in qualsiasi momento? <span>+</span>
+        </button>
+        <div class="faq-a">Assolutamente sì. Nessun contratto, nessuna penale. Gestisci tutto dall'area clienti con un clic.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Quanto costa davvero OpenAI? <span>+</span>
+        </button>
+        <div class="faq-a">Nulla per te! Il costo dell'AI è incluso nel tuo abbonamento mensile. Nessun costo nascosto.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINALE ══════════════════════════════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Inizia oggi. Gratis per 14 giorni.</h2>
+    <p>Mentre i tuoi concorrenti dormono, GustoAI lavora per te.</p>
+    <a href="#pricing" class="btn btn-primary btn-xl">
+      Attiva GustoAI gratis →
+    </a>
+    <div class="final-cta-note">Nessuna carta richiesta per iniziare · Cancelli quando vuoi</div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ══════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <div class="logo"><span class="logo-icon">🍽️</span><span class="logo-text">GustoAI</span></div>
+      <p>Il chatbot AI pensato per i ristoratori italiani.</p>
+      <div class="social-links">
+        <a href="#" title="Instagram">📸</a>
+        <a href="#" title="Facebook">👤</a>
+        <a href="#" title="TikTok">🎵</a>
+      </div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Prodotto</h4>
+        <a href="#features">Funzionalità</a>
+        <a href="#pricing">Prezzi</a>
+        <a href="#demo">Demo</a>
+      </div>
+      <div class="footer-col">
+        <h4>Supporto</h4>
+        <a href="mailto:info@gustoai.app">Email</a>
+        <a href="#">Guide</a>
+        <a href="#">Chat</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legale</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Termini di servizio</a>
+        <a href="#">Cookie</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 GustoAI · Tutti i diritti riservati · Made in 🇮🇹 Italy</p>
+  </div>
+</footer>
+
+<!-- Checkout Modal -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-overlay" onclick="closeModal()"></div>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon">🍽️</div>
+    <h3>Inizia i tuoi 14 giorni gratis</h3>
+    <p>Piano selezionato: <strong id="selectedPlanName"></strong></p>
+    <form id="checkoutForm" onsubmit="submitCheckout(event)">
+      <input type="text" id="restaurantName" placeholder="Nome del tuo ristorante *" required />
+      <input type="email" id="userEmail" placeholder="La tua email *" required />
+      <button type="submit" class="btn btn-primary btn-block" id="checkoutSubmitBtn">
+        Continua al pagamento →
+      </button>
+    </form>
+    <div class="modal-guarantee">🔒 Sicuro · Nessun addebito per 14 giorni</div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

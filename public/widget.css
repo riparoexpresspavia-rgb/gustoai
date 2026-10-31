@@ -1,0 +1,88 @@
+/* ══════════════════════════════════════════════
+   GustoAI — Widget CSS (embeddabile ovunque)
+   ══════════════════════════════════════════════ */
+.gustoai-widget-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.gustoai-bubble {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  transition: transform .2s, box-shadow .2s;
+  position: relative;
+  border: none;
+}
+.gustoai-bubble:hover { transform: scale(1.1); box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+.gustoai-badge {
+  position: absolute; top: -2px; right: -2px;
+  background: #f39c12; color: white;
+  font-size: 10px; font-weight: 700;
+  width: 18px; height: 18px;
+  border-radius: 50%; display: flex;
+  align-items: center; justify-content: center;
+  border: 2px solid white;
+}
+.gustoai-window {
+  position: absolute; bottom: 72px; right: 0;
+  width: 340px; background: white;
+  border-radius: 18px;
+  box-shadow: 0 12px 60px rgba(0,0,0,.18);
+  overflow: hidden;
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+.gustoai-header { padding: 16px 18px; display:flex; align-items:center; gap:12px; color:white; }
+.gustoai-avatar { font-size: 26px; }
+.gustoai-bot-name { font-weight: 700; font-size: 15px; }
+.gustoai-status { font-size: 11px; opacity: .8; }
+.gustoai-close { margin-left:auto; background:none; border:none; color:white; font-size:18px; cursor:pointer; opacity:.8; }
+.gustoai-close:hover { opacity:1; }
+.gustoai-messages {
+  padding: 16px; min-height: 160px; max-height: 280px;
+  overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+}
+.gustoai-msg { font-size: 14px; line-height: 1.55; max-width: 84%; }
+.gustoai-msg.bot {
+  background: #f0f0f0; padding: 10px 14px;
+  border-radius: 14px 14px 14px 4px;
+  align-self: flex-start; color: #333;
+}
+.gustoai-msg.user {
+  padding: 10px 14px;
+  border-radius: 14px 14px 4px 14px;
+  align-self: flex-end; color: white;
+}
+.gustoai-typing { font-style: italic; color: #999; font-size: 13px; }
+.gustoai-quick { padding: 8px 14px; display:flex; flex-wrap:wrap; gap:7px; border-top:1px solid #f0f0f0; }
+.gustoai-quick button {
+  font-size: 12px; font-weight: 600;
+  padding: 5px 12px; border-radius: 999px;
+  cursor: pointer; border: 1px solid; transition: all .2s;
+  background: transparent;
+}
+.gustoai-input-row { padding: 12px 14px; display:flex; gap:8px; border-top:1px solid #f0f0f0; }
+.gustoai-input {
+  flex:1; border:1px solid #ddd; border-radius:10px;
+  padding:9px 12px; font-size:14px; outline:none;
+  font-family: inherit;
+}
+.gustoai-send { border:none; border-radius:10px; padding:9px 14px; cursor:pointer; font-size:15px; color:white; }
+.gustoai-send:hover { opacity: .85; }
+.gustoai-branding {
+  text-align: center; padding: 6px;
+  font-size: 10px; color: #bbb;
+  border-top: 1px solid #f5f5f5;
+}
+.gustoai-branding a { color: inherit; text-decoration: none; }
+.gustoai-branding a:hover { color: #888; }
+
+@media (max-width: 480px) {
+  .gustoai-window { width: calc(100vw - 32px); right: -8px; }
+}
