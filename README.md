@@ -33,13 +33,22 @@ npm start       # produzione
 
 ---
 
-## 🚂 Deploy su Railway (Gratuito)
+## 🚀 Deploy su Render
 
-1. Vai su [railway.app](https://railway.app) e crea un account
-2. **New Project → Deploy from GitHub repo**
-3. Collega questo repository
-4. Aggiungi le variabili d'ambiente nel pannello Railway
-5. ✅ Online automaticamente con HTTPS
+Il repository include un Blueprint (`render.yaml`) già configurato.
+
+1. Carica il progetto su GitHub (branch `main`)
+2. Vai su [dashboard.render.com](https://dashboard.render.com) → **New → Blueprint**
+3. Seleziona il repository: Render legge `render.yaml` e crea il Web Service `gustoai`
+4. Inserisci le variabili richieste (`OPENAI_API_KEY`, chiavi Stripe, `FRONTEND_URL`)
+5. ✅ Online su `https://gustoai.onrender.com` (o il nome assegnato) con HTTPS
+
+Note:
+- `PORT` è impostata da Render automaticamente, non definirla.
+- Se `FRONTEND_URL` non è impostata viene usata `RENDER_EXTERNAL_URL`.
+- Health check: `GET /health` (mostra anche se OpenAI/Stripe sono configurati).
+- Webhook Stripe: punta a `https://<tuo-servizio>.onrender.com/api/stripe/webhook`.
+- Piano Free: il servizio va in sleep dopo 15 min di inattività (primo avvio lento) e i dati in memoria si perdono ad ogni riavvio.
 
 ---
 
@@ -77,7 +86,8 @@ gustoai/
 │       └── dashboard.js
 ├── .env.example
 ├── package.json
-└── railway.toml      # Config deploy
+├── render.yaml       # Blueprint deploy Render
+└── railway.toml      # (legacy) config Railway
 ```
 
 ---
@@ -97,7 +107,7 @@ gustoai/
 
 Ogni cliente incolla sul suo sito:
 ```html
-<script src="https://gustoai.up.railway.app/api/widget/BOT_ID/embed"></script>
+<script src="https://gustoai.onrender.com/api/widget/BOT_ID/embed"></script>
 ```
 
 ---

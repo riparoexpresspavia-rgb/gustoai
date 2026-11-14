@@ -1,0 +1,36 @@
+# ══════════════════════════════════════════════════════════════
+# GustoAI — Render Blueprint
+# Docs: https://render.com/docs/blueprint-spec
+# Deploy: Render Dashboard → New → Blueprint → seleziona il repo
+# ══════════════════════════════════════════════════════════════
+services:
+  - type: web
+    name: gustoai
+    runtime: node
+    plan: free            # passa a "starter" per evitare lo spin-down
+    region: frankfurt     # più vicino all'Italia
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      # PORT viene impostata automaticamente da Render: NON definirla.
+      # RENDER_EXTERNAL_URL viene impostata automaticamente da Render
+      # e usata come fallback se FRONTEND_URL non è definita.
+      - key: OPENAI_API_KEY
+        sync: false       # da inserire a mano nel pannello Render
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_ID_BASIC
+        sync: false
+      - key: STRIPE_PRICE_ID_PRO
+        sync: false
+      - key: FRONTEND_URL
+        sync: false       # es. https://gustoai.onrender.com o dominio custom

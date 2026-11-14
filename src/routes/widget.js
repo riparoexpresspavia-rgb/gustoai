@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { getBaseUrl } = require('../utils/baseUrl');
 
 /**
  * GET /api/widget/:botId/embed
@@ -7,12 +8,18 @@ const router = express.Router();
  */
 router.get('/:botId/embed', (req, res) => {
   const { botId } = req.params;
-  const baseUrl = process.env.FRONTEND_URL || `http://localhost:${process.env.PORT || 3000}`;
+
+  // Evita injection nello script generato: botId solo alfanumerico/-/_
+  if (!/^[a-zA-Z0-9_-]{1,64}$/.test(botId)) {
+    return res.status(400).type('application/javascript').send('/* botId non valido */');
+  }
+
+  const baseUrl = getBaseUrl(req);
 
   const script = `
 (function() {
-  var GUSTO_BOT_ID = '${botId}';
-  var GUSTO_API_URL = '${baseUrl}';
+  var GUSTO_BOT_ID = ${JSON.stringify(botId)};
+  var GUSTO_API_URL = ${JSON.stringify(baseUrl)};
   
   // Carica il widget CSS
   var link = document.createElement('link');

@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-let stripe;
+const { getBaseUrl } = require('../utils/baseUrl');
+let stripe = null;
 
-try {
-  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-} catch (e) {
+if (process.env.STRIPE_SECRET_KEY) {
+  try {
+    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+  } catch (e) {
+    console.warn('Errore inizializzazione Stripe:', e.message);
+  }
+} else {
   console.warn('Stripe non configurato - modalità demo');
 }
 
@@ -40,7 +45,7 @@ router.post('/checkout', async (req, res) => {
       return res.status(400).json({ error: 'Piano non valido' });
     }
 
-    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl(req);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

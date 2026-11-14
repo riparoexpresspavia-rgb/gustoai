@@ -2,7 +2,14 @@ const express = require('express');
 const router = express.Router();
 const OpenAI = require('openai');
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Client OpenAI creato in modo lazy: il server parte anche senza chiave
+// (evita crash al boot su Render se la variabile non è ancora impostata).
+let openai = null;
+function getOpenAI() {
+  if (!process.env.OPENAI_API_KEY) return null;
+  if (!openai) openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return openai;
+}
 
 // Database in-memory semplice (sostituire con Supabase in produzione)
 const botConfigs = new Map();
@@ -61,7 +68,12 @@ router.post('/', async (req, res) => {
     ];
 
     // Chiamata OpenAI
-    const completion = await openai.chat.completions.create({
+    const client = getOpenAI();
+    if (!client) {
+      return res.status(503).json({ error: 'Servizio AI non ancora configurato.' });
+    }
+
+    const completion = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages,
       max_tokens: 300,

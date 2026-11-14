@@ -14,6 +14,10 @@ const dashboardRouter = require('./routes/dashboard');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Render (come ogni PaaS) sta dietro un reverse proxy: serve per avere
+// l'IP reale del client (rate limit) e il protocollo https corretto.
+app.set('trust proxy', 1);
+
 // ── Security Middleware ──────────────────────────────────────────────────────
 app.use(helmet({
   contentSecurityPolicy: false, // disabilitato per permettere iframe widget
@@ -45,8 +49,13 @@ app.use('/api/widget',    widgetRouter);
 app.use('/api/stripe',    stripeRouter);
 app.use('/api/dashboard', dashboardRouter);
 
-// ── Health Check (per Railway) ────────────────────────────────────────────────
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'GustoAI' }));
+// ── Health Check (per Render) ─────────────────────────────────────────────────
+app.get('/health', (req, res) => res.json({
+  status: 'ok',
+  service: 'GustoAI',
+  openai: Boolean(process.env.OPENAI_API_KEY),
+  stripe: Boolean(process.env.STRIPE_SECRET_KEY),
+}));
 
 // ── SPA Fallback ──────────────────────────────────────────────────────────────
 app.get('*', (req, res) => {

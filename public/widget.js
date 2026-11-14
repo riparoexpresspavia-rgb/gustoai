@@ -1,13 +1,16 @@
 /**
  * GustoAI Widget — Embeddable Chatbot
  * Incolla questo nel tuo sito:
- * <script src="https://gustoai.up.railway.app/api/widget/IL-TUO-BOT-ID/embed"></script>
+ * <script src="https://gustoai.onrender.com/api/widget/IL-TUO-BOT-ID/embed"></script>
  */
 (function (window, document) {
   'use strict';
 
-  const BOT_ID  = document.currentScript?.getAttribute('data-bot-id') || 'demo';
-  const API_URL = document.currentScript?.getAttribute('data-api-url') || 'https://gustoai.up.railway.app';
+  const currentScript = document.currentScript;
+  const BOT_ID  = currentScript?.getAttribute('data-bot-id') || 'demo';
+  // Fallback: origin da cui è stato caricato questo script
+  const API_URL = currentScript?.getAttribute('data-api-url')
+    || (currentScript?.src ? new URL(currentScript.src).origin : window.location.origin);
 
   let config = {
     name: 'GustoBot',
@@ -111,12 +114,17 @@
   function updateQuickReplies(replies) {
     const qr = document.getElementById('gustoai-quick');
     if (!qr || !replies?.length) return;
-    qr.innerHTML = replies.map(r =>
-      `<button onclick="GustoAI.quickSend('${r}')" 
-        style="color:${config.primaryColor};border-color:${config.primaryColor}20">
-        ${sanitize(r)}
-      </button>`
-    ).join('');
+    // Costruzione via DOM (niente stringhe in onclick → niente XSS)
+    qr.innerHTML = '';
+    replies.forEach(r => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = r;
+      btn.style.color = config.primaryColor;
+      btn.style.borderColor = config.primaryColor + '20';
+      btn.addEventListener('click', () => sendMessage(r));
+      qr.appendChild(btn);
+    });
   }
 
   function sanitize(str) {
