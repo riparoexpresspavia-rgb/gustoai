@@ -29,14 +29,14 @@
     </div>
     <div class="nav-cta">
       <a href="#pricing" class="btn btn-outline">Vedi prezzi</a>
-      <a href="#demo" class="btn btn-primary">Demo gratis</a>
+      <a href="#richiedi-demo" class="btn btn-primary">Demo gratis</a>
     </div>
     <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="#features" onclick="toggleMenu()">Funzionalità</a>
     <a href="#pricing" onclick="toggleMenu()">Prezzi</a>
-    <a href="#demo" onclick="toggleMenu()">Demo gratis</a>
+    <a href="#richiedi-demo" onclick="toggleMenu()">Demo gratis</a>
   </div>
 </nav>
 
@@ -332,6 +332,36 @@
   </div>
 </section>
 
+<!-- ═══ LEAD FORM (Demo gratuita via email) ═════════════════════════════════════ -->
+<section class="lead-section" id="richiedi-demo">
+  <div class="container lead-inner">
+    <div class="lead-copy">
+      <div class="section-badge">🎁 Demo gratuita</div>
+      <h2>Ricevi la demo personalizzata per il tuo locale</h2>
+      <p>Lasciaci nome ed email: ti inviamo subito il link alla demo e qualche consiglio pratico per non perdere più prenotazioni. Nessun impegno.</p>
+      <ul class="lead-benefits">
+        <li>✓ Demo live da provare dal telefono</li>
+        <li>✓ Installazione gratuita sul tuo sito</li>
+        <li>✓ 14 giorni di prova senza addebiti</li>
+      </ul>
+    </div>
+    <form class="lead-form" id="leadForm" onsubmit="submitLead(event)" novalidate>
+      <input type="text" id="leadName" name="name" placeholder="Il tuo nome *" autocomplete="name" maxlength="80" required />
+      <input type="email" id="leadEmail" name="email" placeholder="La tua email *" autocomplete="email" maxlength="120" required />
+      <input type="text" id="leadRestaurant" name="restaurantName" placeholder="Nome del ristorante" autocomplete="organization" maxlength="100" />
+      <input type="tel" id="leadPhone" name="phone" placeholder="Telefono (facoltativo)" autocomplete="tel" maxlength="30" />
+      <!-- Honeypot anti-spam: nascosto agli utenti -->
+      <input type="text" name="website" id="leadWebsite" class="lead-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <label class="lead-consent">
+        <input type="checkbox" id="leadConsent" required />
+        <span>Acconsento a ricevere la demo e 2 email informative su GustoAI. Posso disiscrivermi in qualsiasi momento.</span>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="leadSubmitBtn">Inviami la demo gratis →</button>
+      <div class="lead-feedback" id="leadFeedback" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
 <!-- ═══ PRICING ═══════════════════════════════════════════════════════════════ -->
 <section class="pricing" id="pricing">
   <div class="container">
@@ -444,7 +474,8 @@
     <a href="#pricing" class="btn btn-primary btn-xl">
       Attiva GustoAI gratis →
     </a>
-    <div class="final-cta-note">Nessuna carta richiesta per iniziare · Cancelli quando vuoi</div>
+    <div class="final-cta-note">Nessun addebito per 14 giorni · Cancelli quando vuoi</div>
+    <p style="margin-top:14px;font-size:15px;"><a href="#richiedi-demo" style="color:inherit;text-decoration:underline;">Preferisci prima ricevere la demo via email?</a></p>
   </div>
 </section>
 
@@ -500,8 +531,9 @@
       <button type="submit" class="btn btn-primary btn-block" id="checkoutSubmitBtn">
         Continua al pagamento →
       </button>
+      <div class="lead-feedback" id="checkoutFeedback" role="status" aria-live="polite"></div>
     </form>
-    <div class="modal-guarantee">🔒 Sicuro · Nessun addebito per 14 giorni</div>
+    <div class="modal-guarantee">🔒 Pagamento sicuro con Stripe · Nessun addebito per 14 giorni · Disdici quando vuoi</div>
   </div>
 </div>
 

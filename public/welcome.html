@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Attivazione completata — GustoAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="welcome-page">
+  <div class="modal-box welcome-box" id="welcomeBox">
+    <div class="modal-icon">⏳</div>
+    <h3>Verifica del pagamento in corso…</h3>
+    <p>Un attimo, stiamo attivando il tuo assistente.</p>
+  </div>
+
+  <template id="tplSuccess">
+    <div class="modal-icon">🎉</div>
+    <h3>Il tuo GustoBot è attivo!</h3>
+    <p>
+      <span class="welcome-status" data-field="status"></span><br><br>
+      <strong data-field="restaurantName"></strong> · <span data-field="planName"></span>
+      <span data-field="trial"></span>
+    </p>
+
+    <strong>1. Copia questo codice</strong>
+    <div class="welcome-code" data-field="embedCode"></div>
+    <div class="welcome-actions">
+      <button class="btn btn-primary" type="button" data-action="copy">📋 Copia codice</button>
+    </div>
+
+    <ol class="welcome-steps">
+      <li>Incollalo nel tuo sito, subito prima di <code>&lt;/body&gt;</code> (WordPress: plugin “Insert Headers and Footers”; Wix: Impostazioni → Codice personalizzato).</li>
+      <li>Rispondi all'email di benvenuto con <strong>menù, orari, telefono e link prenotazioni</strong>: personalizziamo noi il tuo assistente.</li>
+      <li>Preferisci che lo installiamo noi? Scrivici a <a href="mailto:info@gustoai.app">info@gustoai.app</a>.</li>
+    </ol>
+
+    <div class="welcome-actions">
+      <button class="btn btn-outline" type="button" data-action="portal">⚙️ Gestisci abbonamento</button>
+      <a class="btn btn-ghost" href="/" style="color:#333;border-color:#ddd;">Torna al sito</a>
+    </div>
+    <div class="lead-feedback" data-field="feedback" role="status" aria-live="polite"></div>
+  </template>
+
+  <template id="tplError">
+    <div class="modal-icon">⚠️</div>
+    <h3>Non riusciamo a verificare il pagamento</h3>
+    <p data-field="message"></p>
+    <p>Se hai completato il pagamento, controlla la tua email: ti abbiamo inviato il codice di attivazione. Altrimenti scrivici a <a href="mailto:info@gustoai.app">info@gustoai.app</a>.</p>
+    <div class="welcome-actions">
+      <button class="btn btn-primary" type="button" data-action="retry">Riprova</button>
+      <a class="btn btn-outline" href="/#pricing">Torna ai piani</a>
+    </div>
+  </template>
+
+  <script src="/welcome.js"></script>
+</body>
+</html>

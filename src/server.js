@@ -10,6 +10,8 @@ const chatRouter = require('./routes/chat');
 const widgetRouter = require('./routes/widget');
 const stripeRouter = require('./routes/stripe');
 const dashboardRouter = require('./routes/dashboard');
+const leadsRouter = require('./routes/leads');
+const { isEmailConfigured } = require('./services/email');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +50,12 @@ app.use('/api/chat',      chatLimiter, chatRouter);
 app.use('/api/widget',    widgetRouter);
 app.use('/api/stripe',    stripeRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/leads',     leadsRouter);
+
+// ── Pagina post-pagamento (attivazione widget) ────────────────────────────────
+app.get('/welcome', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/welcome.html'));
+});
 
 // ── Health Check (per Render) ─────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({
@@ -55,6 +63,9 @@ app.get('/health', (req, res) => res.json({
   service: 'GustoAI',
   openai: Boolean(process.env.OPENAI_API_KEY),
   stripe: Boolean(process.env.STRIPE_SECRET_KEY),
+  stripeWebhook: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+  stripePrices: Boolean(process.env.STRIPE_PRICE_ID_BASIC && process.env.STRIPE_PRICE_ID_PRO),
+  email: isEmailConfigured(),
 }));
 
 // ── SPA Fallback ──────────────────────────────────────────────────────────────

@@ -11,10 +11,59 @@ function getOpenAI() {
   return openai;
 }
 
-// Database in-memory semplice (sostituire con Supabase in produzione)
-const botConfigs = new Map();
+const crypto = require('crypto');
+const store = require('../services/store');
+const accounts = require('../services/accounts');
 
-// Config default per demo
+// Configurazioni bot salvate nello store JSON (collezione "botConfigs")
+const botConfigs = {
+  has: (id) => Boolean(store.get('botConfigs', id)),
+  get: (id) => store.get('botConfigs', id),
+  set: (id, cfg) => store.set('botConfigs', id, cfg),
+};
+
+// Config demo (stessa di /api/dashboard/demo-config) usata per botId "demo"
+const DEMO_CONFIG = {
+  name: 'GustoBot',
+  restaurantName: 'Ristorante La Bella Italia',
+  cuisine: 'italiana tradizionale',
+  welcomeMessage: 'Ciao! 👋 Sono GustoBot di La Bella Italia! Come posso aiutarti oggi?',
+  menu: [
+    { name: 'Spaghetti alla Carbonara', description: 'Ricetta tradizionale romana', price: '14' },
+    { name: 'Risotto ai Funghi Porcini', description: 'Con porcini freschi di stagione', price: '16' },
+    { name: 'Bistecca alla Fiorentina', description: 'Chianina DOP, al kg', price: '45' },
+    { name: 'Tiramisù della Casa', description: 'Ricetta segreta dello chef', price: '7' },
+  ],
+  openingHours: 'Mar-Dom: 12:00-15:00 | 19:00-23:00 | Lunedì chiuso',
+  phone: '+39 02 1234567',
+  address: 'Via Roma 1, Milano',
+  reservationLink: '',
+  instagramUrl: 'https://instagram.com/gustoai',
+  facebookUrl: 'https://facebook.com/gustoai',
+  primaryColor: '#e74c3c',
+  language: 'it',
+};
+
+// Campi modificabili via API config (whitelist)
+const EDITABLE_FIELDS = [
+  'name', 'restaurantName', 'cuisine', 'welcomeMessage', 'menu', 'openingHours',
+  'phone', 'address', 'reservationLink', 'instagramUrl', 'facebookUrl', 'primaryColor', 'language',
+];
+
+/**
+ * Risolve la config di un bot: config salvata → nome ristorante dall'account → default.
+ */
+async function resolveConfig(botId) {
+  if (!botId || botId === accounts.DEMO_BOT_ID) return DEMO_CONFIG;
+  const saved = botConfigs.get(botId);
+  if (saved) return { ...DEFAULT_CONFIG, ...saved };
+  const account = await accounts.getAccount(botId);
+  return account?.restaurantName
+    ? { ...DEFAULT_CONFIG, restaurantName: account.restaurantName }
+    : DEFAULT_CONFIG;
+}
+
+// Config default per bot nuovi non ancora personalizzati
 const DEFAULT_CONFIG = {
   name: 'GustoBot',
   restaurantName: 'Il tuo Ristorante',
@@ -47,19 +96,28 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Messaggio troppo lungo (max 500 caratteri)' });
     }
 
-    // Carica configurazione bot (default se non trovata)
-    const config = botId && botConfigs.has(botId)
-      ? botConfigs.get(botId)
-      : DEFAULT_CONFIG;
+    // Il bot risponde solo se l'abbonamento è attivo (o in prova). "demo" sempre attivo.
+    if (!(await accounts.isBotActive(botId))) {
+      return res.status(402).json({
+        error: 'Questo assistente non è attivo. Contatta direttamente il ristorante.',
+        inactive: true,
+      });
+    }
+
+    // Carica configurazione bot
+    const config = await resolveConfig(botId);
 
     // Costruisce il prompt di sistema personalizzato per il ristorante
     const systemPrompt = buildSystemPrompt(config);
 
     // Prepara la history della conversazione (max ultimi 10 messaggi)
-    const recentHistory = (conversationHistory || []).slice(-10).map(msg => ({
-      role: msg.role === 'bot' ? 'assistant' : 'user',
-      content: msg.content,
-    }));
+    const recentHistory = (Array.isArray(conversationHistory) ? conversationHistory : [])
+      .slice(-10)
+      .filter(msg => msg && typeof msg.content === 'string')
+      .map(msg => ({
+        role: msg.role === 'bot' || msg.role === 'assistant' ? 'assistant' : 'user',
+        content: msg.content.slice(0, 1000),
+      }));
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -104,12 +162,13 @@ router.post('/', async (req, res) => {
  * GET /api/chat/config/:botId
  * Ritorna la configurazione pubblica di un bot
  */
-router.get('/config/:botId', (req, res) => {
+router.get('/config/:botId', async (req, res) => {
   const { botId } = req.params;
-  const config = botConfigs.get(botId) || DEFAULT_CONFIG;
+  const [config, active] = await Promise.all([resolveConfig(botId), accounts.isBotActive(botId)]);
 
   // Ritorna solo i campi pubblici (non dati sensibili)
   res.json({
+    active,
     name: config.name,
     restaurantName: config.restaurantName,
     welcomeMessage: config.welcomeMessage,
@@ -123,13 +182,33 @@ router.get('/config/:botId', (req, res) => {
 
 /**
  * POST /api/chat/config/:botId
- * Salva la configurazione del bot (protetto)
+ * Salva la configurazione del bot.
+ * Protetto: header "x-admin-token" = ADMIN_TOKEN (configurazione fatta da te
+ * per conto del ristoratore, finché non c'è la dashboard cliente con login).
  */
 router.post('/config/:botId', (req, res) => {
+  const adminToken = process.env.ADMIN_TOKEN;
+  const given = String(req.headers['x-admin-token'] || '');
+  const authorized = adminToken
+    && given.length === adminToken.length
+    && crypto.timingSafeEqual(Buffer.from(given), Buffer.from(adminToken));
+
+  if (!authorized) {
+    return res.status(401).json({ error: 'Non autorizzato' });
+  }
+
   const { botId } = req.params;
-  const config = { ...DEFAULT_CONFIG, ...req.body };
+  if (!/^[a-zA-Z0-9_-]{1,64}$/.test(botId) || botId === accounts.DEMO_BOT_ID) {
+    return res.status(400).json({ error: 'botId non valido' });
+  }
+
+  const patch = {};
+  for (const key of EDITABLE_FIELDS) {
+    if (req.body?.[key] !== undefined) patch[key] = req.body[key];
+  }
+  const config = { ...DEFAULT_CONFIG, ...(botConfigs.get(botId) || {}), ...patch };
   botConfigs.set(botId, config);
-  res.json({ success: true, botId });
+  res.json({ success: true, botId, config });
 });
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

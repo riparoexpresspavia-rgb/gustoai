@@ -52,6 +52,14 @@ Note:
 
 ---
 
+## 💳 Pagamenti e 📣 Marketing
+
+Setup completo di Stripe (checkout, webhook, portale clienti) e Resend (sequenza di 3 email) in **[MARKETING_SETUP.md](./MARKETING_SETUP.md)**.
+
+Test locale dell'intero flusso con Stripe e Resend simulati: `npm run test:smoke`
+
+---
+
 ## 🎨 Come funziona
 
 ### Per il ristoratore (cliente)

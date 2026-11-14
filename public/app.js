@@ -45,12 +45,25 @@ function closeModal() {
   document.getElementById('checkoutModal').classList.remove('open');
 }
 
+function setFeedback(el, text, type) {
+  if (!el) return;
+  el.textContent = text || '';
+  el.className = `lead-feedback${type ? ' ' + type : ''}`;
+}
+
 async function submitCheckout(e) {
   e.preventDefault();
   const btn = document.getElementById('checkoutSubmitBtn');
-  const restaurantName = document.getElementById('restaurantName').value;
-  const email = document.getElementById('userEmail').value;
+  const feedback = document.getElementById('checkoutFeedback');
+  const restaurantName = document.getElementById('restaurantName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
 
+  const resetBtn = () => {
+    btn.textContent = 'Continua al pagamento →';
+    btn.disabled = false;
+  };
+
+  setFeedback(feedback, '');
   btn.textContent = 'Reindirizzamento...';
   btn.disabled = true;
 
@@ -61,20 +74,78 @@ async function submitCheckout(e) {
       body: JSON.stringify({ plan: selectedPlan, restaurantName, email }),
     });
 
-    const data = await resp.json();
+    const data = await resp.json().catch(() => ({}));
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      // Stripe non configurato: mostra messaggio
-      alert('✅ Grazie! Ti contatteremo a breve per completare la registrazione.\n\nEmail ricevuta: ' + email);
-      closeModal();
+    if (resp.ok && data.url) {
+      window.location.href = data.url; // Stripe Checkout
+      return;
     }
+
+    if (resp.status === 503) {
+      // Pagamenti non ancora attivi: salviamo comunque il contatto come lead
+      await fetch(`${API_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: restaurantName || email, email, restaurantName, consent: true, source: `checkout_${selectedPlan}` }),
+      }).catch(() => {});
+      setFeedback(feedback, '✅ Grazie! Ti contatteremo a breve per completare l\'attivazione.', 'success');
+      resetBtn();
+      return;
+    }
+
+    setFeedback(feedback, data.error || 'Errore imprevisto. Riprova.', 'error');
+    resetBtn();
   } catch (err) {
-    alert('Errore di connessione. Riprova o contattaci via email.');
-    btn.textContent = 'Continua al pagamento →';
-    btn.disabled = false;
+    setFeedback(feedback, 'Errore di connessione. Riprova o scrivici a info@gustoai.app.', 'error');
+    resetBtn();
   }
+}
+
+// ── Lead form (demo gratuita via email) ───────────────────────
+async function submitLead(e) {
+  e.preventDefault();
+  const btn = document.getElementById('leadSubmitBtn');
+  const feedback = document.getElementById('leadFeedback');
+
+  const payload = {
+    name: document.getElementById('leadName').value.trim(),
+    email: document.getElementById('leadEmail').value.trim(),
+    restaurantName: document.getElementById('leadRestaurant').value.trim(),
+    phone: document.getElementById('leadPhone').value.trim(),
+    consent: document.getElementById('leadConsent').checked,
+    website: document.getElementById('leadWebsite').value, // honeypot
+    source: new URLSearchParams(window.location.search).get('utm_source') || 'landing',
+  };
+
+  if (payload.name.length < 2) return setFeedback(feedback, 'Inserisci il tuo nome.', 'error');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)) return setFeedback(feedback, 'Inserisci un indirizzo email valido.', 'error');
+  if (!payload.consent) return setFeedback(feedback, 'Spunta il consenso per ricevere la demo via email.', 'error');
+
+  const label = btn.textContent;
+  btn.textContent = 'Invio in corso...';
+  btn.disabled = true;
+  setFeedback(feedback, '');
+
+  try {
+    const resp = await fetch(`${API_URL}/api/leads`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json().catch(() => ({}));
+
+    if (resp.ok && data.success) {
+      setFeedback(feedback, `🎉 ${data.message || 'Fatto! Controlla la tua email.'}`, 'success');
+      document.getElementById('leadForm').reset();
+      btn.textContent = 'Demo inviata ✓';
+      return;
+    }
+    setFeedback(feedback, data.error || 'Errore imprevisto. Riprova.', 'error');
+  } catch (err) {
+    setFeedback(feedback, 'Errore di connessione. Riprova tra poco.', 'error');
+  }
+  btn.textContent = label;
+  btn.disabled = false;
 }
 
 // ── Widget demo (nella hero) ──────────────────────────────────

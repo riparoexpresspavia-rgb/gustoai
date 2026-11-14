@@ -32,5 +32,25 @@ services:
         sync: false
       - key: STRIPE_PRICE_ID_PRO
         sync: false
+      - key: STRIPE_TRIAL_DAYS
+        value: "14"
       - key: FRONTEND_URL
         sync: false       # es. https://gustoai.onrender.com o dominio custom
+      # ── Email marketing (Resend) ──
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false       # es. GustoAI <ciao@tuodominio.it>
+      - key: EMAIL_REPLY_TO
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      # ── Sicurezza (generati automaticamente da Render) ──
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: APP_SECRET
+        generateValue: true
+      # Con piano a pagamento + Persistent Disk montato su /var/data
+      # imposta DATA_DIR=/var/data per non perdere lead/config ai riavvii.
+      # - key: DATA_DIR
+      #   value: /var/data

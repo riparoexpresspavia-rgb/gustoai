@@ -200,6 +200,11 @@
   // ── Init ───────────────────────────────────────────────────────
   async function init() {
     await loadConfig();
+    // Abbonamento non attivo: il widget non viene mostrato sul sito del ristorante
+    if (config.active === false) {
+      console.info('[GustoAI] Assistente non attivo per questo sito.');
+      return;
+    }
     injectWidget();
   }
 

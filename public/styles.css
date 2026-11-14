@@ -584,6 +584,62 @@ body {
 .modal-box input:focus { border-color: var(--red); }
 .modal-guarantee { margin-top: 14px; font-size: 12px; color: #aaa; }
 
+/* ── Lead form (demo gratuita) ─────────────────────────────────── */
+.lead-section { padding: 96px 0; background: var(--red-light); }
+.lead-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.lead-copy h2 { font-size: clamp(26px, 3.5vw, 38px); font-weight: 800; margin: 14px 0; letter-spacing: -.5px; }
+.lead-copy p { font-size: 17px; color: #555; margin-bottom: 20px; }
+.lead-benefits { list-style: none; }
+.lead-benefits li { padding: 6px 0; font-size: 16px; font-weight: 500; }
+.lead-form {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lead-form input[type="text"],
+.lead-form input[type="email"],
+.lead-form input[type="tel"] {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 13px 14px;
+  font-size: 15px;
+  font-family: var(--font);
+  outline: none;
+  width: 100%;
+}
+.lead-form input:focus { border-color: var(--red); }
+.lead-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; opacity: 0; }
+.lead-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: #666; text-align: left; cursor: pointer; }
+.lead-consent input { margin-top: 3px; accent-color: var(--red); flex-shrink: 0; }
+.lead-feedback { font-size: 14px; min-height: 20px; text-align: center; }
+.lead-feedback.success { color: #1e8449; font-weight: 600; }
+.lead-feedback.error { color: var(--red-dark); font-weight: 600; }
+
+/* ── Welcome page (post-pagamento) ─────────────────────────────── */
+.welcome-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f6f6f6; padding: 32px 16px; }
+.welcome-box { max-width: 620px; width: 100%; text-align: left; }
+.welcome-box h3 { text-align: center; }
+.welcome-box .modal-icon, .welcome-box > p { text-align: center; }
+.welcome-code {
+  background: var(--dark);
+  color: #f8f8f2;
+  border-radius: 10px;
+  padding: 16px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  margin: 12px 0;
+}
+.welcome-steps { margin: 20px 0 24px 20px; color: #444; font-size: 15px; line-height: 1.8; }
+.welcome-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+.welcome-status { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #d5f5e3; color: #1e8449; }
+.welcome-status.inactive { background: var(--red-light); color: var(--red-dark); }
+
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .hero-widget-preview { display: none; }
@@ -596,6 +652,7 @@ body {
   .step-arrow { transform: rotate(90deg); }
   .testimonials-grid { grid-template-columns: 1fr; }
   .demo-container { grid-template-columns: 1fr; }
+  .lead-inner { grid-template-columns: 1fr; gap: 32px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .footer-inner { flex-direction: column; gap: 32px; }
   .footer-links { flex-wrap: wrap; gap: 32px; }
