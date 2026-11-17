@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Dashboard - GustoAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/dashboard.css" />
+</head>
+<body class="db-page">
+
+  <!-- Header -->
+  <header class="db-header">
+    <div class="db-header-inner">
+      <a href="/" class="logo"><span class="logo-icon">&#x1F37D;&#xFE0F;</span> <span class="logo-text">GustoAI</span></a>
+      <div class="db-header-right">
+        <span class="db-badge" id="dbPlanBadge"></span>
+        <span class="db-email" id="dbEmail"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div id="dbLoading" class="db-loading">
+    <div class="db-spinner"></div>
+    <p>Caricamento dashboard&hellip;</p>
+  </div>
+
+  <!-- Error state -->
+  <div id="dbError" class="db-error" style="display:none;">
+    <div class="db-error-icon">&#x26A0;&#xFE0F;</div>
+    <h2>Accesso non autorizzato</h2>
+    <p id="dbErrorMsg">Il link non &egrave; valido o &egrave; scaduto.</p>
+    <p>Usa il link dalla tua <strong>email di benvenuto</strong> o dalla pagina di attivazione.<br>
+    Per assistenza: <a href="mailto:info@gustoai.app">info@gustoai.app</a></p>
+    <a href="/" class="btn btn-primary" style="margin-top:16px;">Torna al sito</a>
+  </div>
+
+  <!-- Dashboard content -->
+  <main id="dbMain" class="db-main" style="display:none;">
+    <div class="db-container">
+
+      <div class="db-title-row">
+        <div>
+          <h1 class="db-title">&#x2699;&#xFE0F; Dashboard</h1>
+          <p class="db-subtitle">Personalizza il tuo assistente AI. Le modifiche vengono applicate immediatamente.</p>
+        </div>
+        <div class="db-status-pill" id="dbStatus"></div>
+      </div>
+
+      <div class="db-save-bar" id="dbSaveBar" style="display:none;">
+        <span>&#x26A0;&#xFE0F; Hai modifiche non salvate</span>
+        <button class="btn btn-primary" id="dbSaveBtn" type="button">&#x1F4BE; Salva modifiche</button>
+      </div>
+
+      <form id="dbForm" novalidate>
+
+        <!-- SEZIONE 1: Informazioni base -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F3E0; Informazioni del ristorante</h2>
+          <div class="db-grid-2">
+            <div class="db-field">
+              <label for="f_restaurantName">Nome del ristorante <span class="req">*</span></label>
+              <input type="text" id="f_restaurantName" name="restaurantName" placeholder="Es. Trattoria da Mario" maxlength="100" />
+            </div>
+            <div class="db-field">
+              <label for="f_phone">Numero di telefono</label>
+              <input type="tel" id="f_phone" name="phone" placeholder="Es. +39 02 1234567" maxlength="30" />
+            </div>
+            <div class="db-field">
+              <label for="f_address">Indirizzo</label>
+              <input type="text" id="f_address" name="address" placeholder="Es. Via Roma 1, Milano" maxlength="150" />
+            </div>
+            <div class="db-field">
+              <label for="f_cuisine">Tipo di cucina</label>
+              <input type="text" id="f_cuisine" name="cuisine" placeholder="Es. italiana tradizionale, fusion, vegana" maxlength="80" />
+            </div>
+          </div>
+        </section>
+
+        <!-- SEZIONE 2: Orari -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F550; Orari e giorni di chiusura</h2>
+          <div class="db-grid-2">
+            <div class="db-field">
+              <label for="f_openingHours">Orari di apertura</label>
+              <textarea id="f_openingHours" name="openingHours" rows="3" placeholder="Es. Lun-Ven: 12:00-15:00 | 19:00-23:00&#10;Sab-Dom: 12:00-24:00"></textarea>
+              <small>Scrivi gli orari in formato libero, l&#x2019;AI li legger&agrave; e risponder&agrave; correttamente.</small>
+            </div>
+            <div class="db-field">
+              <label for="f_closingDays">Giorni di chiusura</label>
+              <input type="text" id="f_closingDays" name="closingDays" placeholder="Es. Luned&igrave; tutto il giorno. Chiusi in agosto." maxlength="200" />
+              <small>Includi chiusure stagionali, festivi, etc.</small>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEZIONE 3: Menu e allergeni -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F4CB; Men&ugrave; e allergeni</h2>
+          <div class="db-field">
+            <label for="f_menuText">Testo del men&ugrave; (formato libero)</label>
+            <textarea id="f_menuText" name="menuText" rows="8" placeholder="Incolla qui il tuo men&ugrave; in testo libero, oppure descrivi i piatti principali.&#10;&#10;Es.&#10;PRIMI: Spaghetti Carbonara 14&#x20AC; | Risotto Porcini 16&#x20AC;&#10;SECONDI: Bistecca Fiorentina 45&#x20AC;/kg&#10;DOLCI: Tiramis&ugrave; della casa 7&#x20AC;"></textarea>
+            <small>L&#x2019;AI user&agrave; questo testo per rispondere alle domande sul men&ugrave;. Puoi usare qualsiasi formato.</small>
+          </div>
+          <div class="db-field">
+            <label for="f_allergens">Informazioni allergeni</label>
+            <textarea id="f_allergens" name="allergens" rows="4" placeholder="Es. Tutti i nostri piatti possono contenere glutine e latticini. Per informazioni specifiche sugli allergeni chiama il ristorante.&#10;Piatti senza glutine disponibili su richiesta."></textarea>
+            <small>L&#x2019;AI citer&agrave; queste informazioni quando i clienti chiedono degli allergeni.</small>
+          </div>
+        </section>
+
+        <!-- SEZIONE 4: Prenotazioni -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F4C5; Prenotazioni</h2>
+          <div class="db-field">
+            <label for="f_reservationLink">Link per le prenotazioni</label>
+            <input type="url" id="f_reservationLink" name="reservationLink" placeholder="Es. https://www.thefork.it/ristorante/... oppure https://wa.me/39..." maxlength="500" />
+            <small>Inserisci il link TheFork, OpenTable, WhatsApp o qualsiasi altro sistema di prenotazione. L&#x2019;AI indirizzer&agrave; qui i clienti.</small>
+          </div>
+        </section>
+
+        <!-- SEZIONE 5: Istruzioni AI -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F916; Istruzioni personalizzate per l&#x2019;AI</h2>
+          <div class="db-field">
+            <label for="f_welcomeMessage">Messaggio di benvenuto del chatbot</label>
+            <input type="text" id="f_welcomeMessage" name="welcomeMessage" placeholder="Es. Ciao! Sono GustoBot di Mario. Come posso aiutarti?" maxlength="200" />
+          </div>
+          <div class="db-field">
+            <label for="f_customInstructions">Istruzioni aggiuntive per l&#x2019;assistente AI</label>
+            <textarea id="f_customInstructions" name="customInstructions" rows="5" placeholder="Es. Rispondi sempre in modo molto cordiale e usa il lei.&#10;Promuovi sempre il vino della casa.&#10;Se qualcuno chiede del parcheggio, digli che c&#x2019;&egrave; parcheggio gratuito in Piazza Garibaldi."></textarea>
+            <small>Istruzioni extra che vuoi dare all&#x2019;AI: tono, promozioni, informazioni speciali, etc.</small>
+          </div>
+        </section>
+
+        <!-- SEZIONE 6: Social e Branding -->
+        <section class="db-section">
+          <h2 class="db-section-title">&#x1F3A8; Social media e branding</h2>
+          <div class="db-grid-2">
+            <div class="db-field">
+              <label for="f_instagramUrl">Instagram</label>
+              <input type="url" id="f_instagramUrl" name="instagramUrl" placeholder="https://instagram.com/iltuoprofilo" maxlength="200" />
+            </div>
+            <div class="db-field">
+              <label for="f_facebookUrl">Facebook</label>
+              <input type="url" id="f_facebookUrl" name="facebookUrl" placeholder="https://facebook.com/iltuoprofilo" maxlength="200" />
+            </div>
+            <div class="db-field">
+              <label for="f_primaryColor">Colore principale del widget</label>
+              <div class="db-color-row">
+                <input type="color" id="f_primaryColor" name="primaryColor" value="#e74c3c" />
+                <input type="text" id="f_primaryColorText" placeholder="#e74c3c" maxlength="7" />
+                <span class="db-color-preview" id="dbColorPreview"></span>
+              </div>
+              <small>Colore del pulsante e dell&#x2019;header del chatbot.</small>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottone salva finale -->
+        <div class="db-submit-row">
+          <button class="btn btn-primary btn-xl" id="dbSubmitBtn" type="submit">&#x1F4BE; Salva tutte le modifiche</button>
+        </div>
+
+      </form>
+
+      <!-- Feedback area -->
+      <div id="dbFeedback" class="db-feedback" role="status" aria-live="polite"></div>
+
+      <!-- Link abbonamento -->
+      <div class="db-footer-links">
+        <a href="#" id="dbPortalLink" class="db-link">&#x1F9FE; Gestisci abbonamento Stripe</a>
+        <span class="db-sep">&middot;</span>
+        <a href="/" class="db-link">Torna al sito</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/dashboard.js"></script>
+</body>
+</html>

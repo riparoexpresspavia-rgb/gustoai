@@ -43,6 +43,17 @@
       : '';
     field('embedCode').textContent = data.embedCode;
 
+    // Pulsante Dashboard
+    const dashBtn = box.querySelector('[data-action="dashboard"]');
+    if (dashBtn) {
+      if (data.dashboardUrl) {
+        dashBtn.href = data.dashboardUrl;
+        dashBtn.removeAttribute('data-action'); // comportamento link normale
+      } else {
+        dashBtn.style.display = 'none';
+      }
+    }
+
     box.querySelector('[data-action="copy"]').addEventListener('click', async (e) => {
       try {
         await navigator.clipboard.writeText(data.embedCode);

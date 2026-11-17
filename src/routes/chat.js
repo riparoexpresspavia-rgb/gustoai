@@ -47,7 +47,8 @@ const DEMO_CONFIG = {
 // Campi modificabili via API config (whitelist)
 const EDITABLE_FIELDS = [
   'name', 'restaurantName', 'cuisine', 'welcomeMessage', 'menu', 'openingHours',
-  'phone', 'address', 'reservationLink', 'instagramUrl', 'facebookUrl', 'primaryColor', 'language',
+  'closingDays', 'menuText', 'allergens', 'phone', 'address', 'reservationLink',
+  'instagramUrl', 'facebookUrl', 'primaryColor', 'language', 'customInstructions',
 ];
 
 /**
@@ -70,7 +71,10 @@ const DEFAULT_CONFIG = {
   cuisine: 'italiana',
   welcomeMessage: 'Ciao! 👋 Sono GustoBot, l\'assistente AI del ristorante. Come posso aiutarti?',
   menu: [],
+  menuText: '',
   openingHours: 'Lun-Dom: 12:00-15:00 | 19:00-23:00',
+  closingDays: '',
+  allergens: '',
   phone: '',
   address: '',
   reservationLink: '',
@@ -78,6 +82,7 @@ const DEFAULT_CONFIG = {
   facebookUrl: '',
   primaryColor: '#e74c3c',
   language: 'it',
+  customInstructions: '',
 };
 
 /**
@@ -214,8 +219,27 @@ router.post('/config/:botId', (req, res) => {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildSystemPrompt(config) {
-  const menuText = config.menu && config.menu.length > 0
-    ? `\nMENÙ DISPONIBILE:\n${config.menu.map(item => `- ${item.name}: ${item.description} (€${item.price})`).join('\n')}`
+  // Menù: preferisce menuText libero se presente, altrimenti array strutturato
+  let menuSection = '';
+  if (config.menuText && config.menuText.trim()) {
+    menuSection = `\nMENÙ:\n${config.menuText.trim()}`;
+  } else if (config.menu && config.menu.length > 0) {
+    menuSection = `\nMENÙ DISPONIBILE:\n${config.menu.map(item => {
+      const allergens = item.allergens ? ` [Allergeni: ${item.allergens}]` : '';
+      return `- ${item.name}: ${item.description} (€${item.price})${allergens}`;
+    }).join('\n')}`;
+  }
+
+  const allergenSection = config.allergens && config.allergens.trim()
+    ? `\nINFO ALLERGENI:\n${config.allergens.trim()}`
+    : '';
+
+  const closingSection = config.closingDays && config.closingDays.trim()
+    ? `\nGIORNI DI CHIUSURA: ${config.closingDays.trim()}`
+    : '';
+
+  const customSection = config.customInstructions && config.customInstructions.trim()
+    ? `\nISTRUZIONI AGGIUNTIVE DEL RISTORANTE:\n${config.customInstructions.trim()}`
     : '';
 
   return `Sei ${config.name}, l'assistente AI virtuale di "${config.restaurantName}", un ristorante di cucina ${config.cuisine}.
@@ -228,12 +252,13 @@ ISTRUZIONI COMPORTAMENTO:
 - Per prenotazioni: indirizza sempre a ${config.reservationLink || 'chiamare il ristorante'}
 - Telefono ristorante: ${config.phone || 'da configurare'}
 - Indirizzo: ${config.address || 'da configurare'}
-- Orari: ${config.openingHours}
-${menuText}
+- Orari: ${config.openingHours}${closingSection}
+${menuSection}${allergenSection}
 
 SOCIAL MEDIA:
 ${config.instagramUrl ? `- Instagram: ${config.instagramUrl}` : ''}
 ${config.facebookUrl ? `- Facebook: ${config.facebookUrl}` : ''}
+${customSection}
 
 NON fare:
 - Non inventare prezzi o piatti non nel menù

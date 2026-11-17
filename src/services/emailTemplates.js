@@ -204,7 +204,7 @@ function salesEmail(step, lead) {
 
 // ── Email di benvenuto dopo il pagamento ─────────────────────────────────────
 /**
- * @param {object} v { restaurantName, planName, embedCode, welcomeUrl, trialEnd }
+ * @param {object} v { restaurantName, planName, embedCode, welcomeUrl, dbUrl, trialEnd }
  */
 function welcomeEmail(v) {
   const locale = String(v.restaurantName || '').trim() || 'il tuo ristorante';
@@ -214,24 +214,25 @@ function welcomeEmail(v) {
 <p>Benvenuto in GustoAI! 🎉</p>
 <p>Il chatbot di <strong>${escapeHtml(locale)}</strong> è <strong>attivo</strong> (${escapeHtml(v.planName)}).</p>
 ${trialDate ? `<p>La tua prova gratuita termina il <strong>${trialDate}</strong>: fino ad allora non ti verrà addebitato nulla.</p>` : ''}
-<p><strong>Come installarlo (1 minuto):</strong> copia questa riga e incollala nel tuo sito, prima di <code>&lt;/body&gt;</code>:</p>
+${v.dbUrl ? button(v.dbUrl, '⚙️ Configura subito il tuo bot →') : ''}
+<p><strong>Nella dashboard puoi personalizzare in autonomia:</strong> nome del ristorante, orari, menù, allergeni, link prenotazioni e istruzioni per l'AI.</p>
+<p><strong>Come installare il widget sul tuo sito (1 minuto):</strong> copia questa riga e incollala prima di <code>&lt;/body&gt;</code>:</p>
 <pre style="background:#f4f4f4;border-radius:8px;padding:14px;font-size:13px;white-space:pre-wrap;word-break:break-all;">${escapeHtml(v.embedCode)}</pre>
 ${button(v.welcomeUrl, 'Apri la pagina di attivazione →')}
-<p><strong>Prossimo passo:</strong> rispondi a questa email con menù, orari, telefono, link per le prenotazioni e colore del tuo brand. Personalizziamo noi il tuo assistente e, se preferisci, installiamo anche il codice sul tuo sito.</p>
-<p>Dalla pagina di attivazione puoi anche gestire o disdire l'abbonamento in qualsiasi momento.</p>
+<p>Dalla pagina di attivazione puoi gestire o disdire l'abbonamento in qualsiasi momento.</p>
 <p>Buon lavoro,<br>Il team GustoAI</p>`;
 
   const text = `Benvenuto in GustoAI!
 
 Il chatbot di ${locale} è attivo (${v.planName}).
 ${trialDate ? `La prova gratuita termina il ${trialDate}: fino ad allora non ti verrà addebitato nulla.\n` : ''}
-Come installarlo: incolla questa riga nel tuo sito, prima di </body>:
+${v.dbUrl ? `⚙️ Configura subito il tuo bot dalla dashboard:\n${v.dbUrl}\n\n` : ''}Nella dashboard puoi personalizzare: nome, orari, menù, allergeni, link prenotazioni e istruzioni per l'AI.
+
+Come installare il widget: incolla questa riga nel tuo sito, prima di </body>:
 ${v.embedCode}
 
 Pagina di attivazione (anche per gestire/disdire l'abbonamento):
 ${v.welcomeUrl}
-
-Prossimo passo: rispondi a questa email con menù, orari, telefono, link prenotazioni e colore del brand. Personalizziamo noi il tuo assistente.
 
 Buon lavoro,
 Il team GustoAI`;

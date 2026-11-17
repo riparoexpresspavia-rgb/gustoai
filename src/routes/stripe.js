@@ -8,6 +8,7 @@ const leads = require('../services/leads');
 const email = require('../services/email');
 const templates = require('../services/emailTemplates');
 const store = require('../services/store');
+const { dashboardUrl } = require('./dashboard');
 
 const stripe = getStripe();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -124,6 +125,9 @@ router.get('/session/:sessionId', async (req, res) => {
     if (!account) return res.status(404).json({ error: 'Account non trovato' });
 
     const baseUrl = getBaseUrl(req);
+    const dbUrl = account.email
+      ? dashboardUrl(baseUrl, account.botId, account.email)
+      : null;
     res.json({
       botId: account.botId,
       plan: account.plan,
@@ -134,6 +138,7 @@ router.get('/session/:sessionId', async (req, res) => {
       active: accounts.isActiveStatus(account.status),
       trialEnd: account.trialEnd,
       embedCode: embedCode(baseUrl, account.botId),
+      dashboardUrl: dbUrl,
     });
   } catch (error) {
     console.error('Errore lettura sessione:', error.message);
@@ -194,6 +199,7 @@ async function onCheckoutCompleted(session, baseUrl) {
       planName: PLANS[account.plan]?.name || account.plan,
       embedCode: embedCode(baseUrl, account.botId),
       welcomeUrl: `${baseUrl}/welcome?session_id=${session.id}`,
+      dbUrl: dashboardUrl(baseUrl, account.botId, account.email),
       trialEnd: account.trialEnd,
     });
     email.sendEmail({

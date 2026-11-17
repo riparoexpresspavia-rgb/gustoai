@@ -1,0 +1,256 @@
+/* ═══════════════════════════════════════════════════════════════
+   GustoAI — Dashboard Cliente
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Layout ──────────────────────────────────────────────────── */
+.db-page {
+  background: #f4f5f7;
+  min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.db-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.db-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.db-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.db-badge {
+  background: #e74c3c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.db-email {
+  font-size: 13px;
+  color: #666;
+}
+
+/* ── Loading / Error ─────────────────────────────────────────── */
+.db-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+  color: #666;
+}
+.db-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e8e8e8;
+  border-top-color: #e74c3c;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.db-error {
+  max-width: 520px;
+  margin: 80px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+.db-error-icon { font-size: 48px; margin-bottom: 16px; }
+.db-error h2 { font-size: 22px; margin-bottom: 10px; }
+.db-error p { color: #555; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+
+/* ── Main container ──────────────────────────────────────────── */
+.db-main { padding: 32px 16px 64px; }
+.db-container { max-width: 900px; margin: 0 auto; }
+
+.db-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.db-title { font-size: 26px; font-weight: 800; color: #111; }
+.db-subtitle { font-size: 14px; color: #666; margin-top: 4px; }
+
+.db-status-pill {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #d5f5e3;
+  color: #1e8449;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+.db-status-pill.warning { background: #fef3cd; color: #856404; }
+.db-status-pill.danger  { background: #fadbd8; color: #c0392b; }
+
+/* ── Save bar (sticky top) ───────────────────────────────────── */
+.db-save-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 40;
+  background: #fff8e5;
+  border: 1px solid #f0c040;
+  border-radius: 10px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07);
+}
+.db-save-bar span { font-size: 14px; font-weight: 600; color: #856404; }
+
+/* ── Sections ────────────────────────────────────────────────── */
+.db-section {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+.db-section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* ── Grid ────────────────────────────────────────────────────── */
+.db-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .db-grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ── Fields ──────────────────────────────────────────────────── */
+.db-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.db-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+.db-field .req { color: #e74c3c; }
+.db-field input[type="text"],
+.db-field input[type="tel"],
+.db-field input[type="url"],
+.db-field input[type="color"],
+.db-field textarea {
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: var(--font);
+  color: #111;
+  background: #fff;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  resize: vertical;
+  width: 100%;
+}
+.db-field input:focus,
+.db-field textarea:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231,76,60,.12);
+}
+.db-field small {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.4;
+}
+
+/* ── Color picker row ────────────────────────────────────────── */
+.db-color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.db-color-row input[type="color"] {
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.db-color-row input[type="text"] {
+  width: 100px;
+  flex-shrink: 0;
+}
+.db-color-preview {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+/* ── Submit row ──────────────────────────────────────────────── */
+.db-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+/* ── Feedback ────────────────────────────────────────────────── */
+.db-feedback {
+  min-height: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  display: none;
+}
+.db-feedback.success { display: block; background: #d5f5e3; color: #1e8449; }
+.db-feedback.error   { display: block; background: #fadbd8; color: #c0392b; }
+
+/* ── Footer links ────────────────────────────────────────────── */
+.db-footer-links {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.db-link { color: #666; text-decoration: none; transition: color .15s; }
+.db-link:hover { color: #e74c3c; }
+.db-sep { color: #ccc; }

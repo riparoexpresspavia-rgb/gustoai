@@ -57,6 +57,11 @@ app.get('/welcome', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/welcome.html'));
 });
 
+// ── Dashboard cliente (configurazione self-service) ───────────────────────────
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/dashboard.html'));
+});
+
 // ── Health Check (per Render) ─────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({
   status: 'ok',
