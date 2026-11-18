@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Anteprima Bot — GustoAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; }
+
+    /* ── Banner anteprima ─────────────────────────────────────── */
+    .preview-banner {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      background: #1a1a2e; color: #fff;
+      font-size: 13px; font-weight: 500;
+      text-align: center; padding: 10px 48px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.35); letter-spacing: .3px;
+    }
+    .preview-banner .badge {
+      background: #e74c3c; color: #fff; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 2px 8px; border-radius: 999px;
+    }
+    .preview-banner .close-btn {
+      position: absolute; right: 18px;
+      color: rgba(255,255,255,.65); text-decoration: none;
+      font-size: 20px; line-height: 1; cursor: pointer; transition: color .2s;
+    }
+    .preview-banner .close-btn:hover { color: #fff; }
+
+    /* ── Page base ────────────────────────────────────────────── */
+    body { padding-top: 42px; background: #fdfaf6; color: #2c2c2c; }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      position: relative; height: 480px;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      background: linear-gradient(135deg, #1a0a00 0%, #3d1a00 50%, #5c2800 100%);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(231,76,60,.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 30%, rgba(255,180,100,.12) 0%, transparent 50%);
+    }
+    .hero::after {
+      content: '🍝 🍷 🌿 🫒 🍋';
+      position: absolute; bottom: 24px; right: 32px;
+      font-size: 22px; letter-spacing: 6px; opacity: .4;
+    }
+    .hero-nav {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px;
+    }
+    .hero-nav .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; }
+    .hero-nav .links { display: flex; gap: 28px; }
+    .hero-nav .links a { color: rgba(255,255,255,.75); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .hero-content { position: relative; text-align: center; color: #fff; padding: 0 24px; }
+    .hero-eyebrow { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 14px; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(36px,6vw,64px); font-weight: 700; line-height: 1.1; margin-bottom: 16px; text-shadow: 0 2px 20px rgba(0,0,0,.4); }
+    .hero-subtitle { font-size: 16px; color: rgba(255,255,255,.75); max-width: 420px; margin: 0 auto 28px; line-height: 1.6; }
+    .hero-cta {
+      display: inline-block; background: #e74c3c; color: #fff;
+      padding: 13px 32px; border-radius: 999px;
+      font-weight: 600; font-size: 15px; text-decoration: none; cursor: default;
+      transition: background .2s, transform .2s;
+    }
+    .hero-cta:hover { background: #c0392b; transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+
+  <div class="preview-banner">
+    <span class="badge">Anteprima</span>
+    Stai visualizzando come i tuoi clienti vedranno il chatbot. Prova a cliccare sulla chat in basso a destra! 💬
+    <a class="close-btn" onclick="this.parentElement.style.display='none'" title="Chiudi">×</a>
+  </div>
+
+  <section class="hero">
+    <nav class="hero-nav">
+      <span class="logo">🍽️ La Bella Tavola</span>
+      <div class="links">
+        <a href="#">Menu</a>
+        <a href="#">Chi siamo</a>
+        <a href="#">Prenotazioni</a>
+        <a href="#">Contatti</a>
+      </div>
+    </nav>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Dal 1987 · Cucina tradizionale italiana</p>
+      <h1 class="hero-title">Un viaggio nel<br>gusto autentico</h1>
+      <p class="hero-subtitle">Sapori della tradizione, ingredienti freschi di stagione, accoglienza di casa.</p>
+      <a class="hero-cta">Prenota un tavolo</a>
+    </div>
+  </section>
+
+  <!-- ── Stili restanti ─────────────────────────────────────── -->
+  <style>
+    .section { max-width: 1000px; margin: 0 auto; padding: 72px 24px; }
+    .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #e74c3c; font-weight: 600; margin-bottom: 10px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px,4vw,38px); margin-bottom: 20px; color: #1a1a1a; }
+    .section-desc { font-size: 16px; color: #666; line-height: 1.7; max-width: 560px; margin-bottom: 48px; }
+    hr.fancy { border: none; height: 1px; background: linear-gradient(to right, transparent, #e0d9d0, transparent); }
+    .dishes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
+    .dish-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,.07); transition: transform .2s, box-shadow .2s; }
+    .dish-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,.12); }
+    .dish-emoji { font-size: 56px; text-align: center; padding: 28px 20px 16px; background: #fdf3e7; display: block; }
+    .dish-info { padding: 16px 18px 20px; }
+    .dish-name { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+    .dish-desc { font-size: 13px; color: #888; line-height: 1.5; }
+    .dish-price { font-size: 15px; font-weight: 700; color: #e74c3c; margin-top: 10px; }
+    .info-strip { background: #1a0a00; color: rgba(255,255,255,.85); }
+    .info-strip .section { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; padding-top: 56px; padding-bottom: 56px; }
+    .info-icon { font-size: 28px; margin-bottom: 10px; }
+    .info-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 6px; }
+    .info-value { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.5; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .review-card { background: #fff; border-radius: 14px; padding: 22px 24px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+    .review-stars { color: #f1c40f; font-size: 15px; margin-bottom: 10px; }
+    .review-text { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 14px; font-style: italic; }
+    .review-author { font-size: 13px; font-weight: 600; color: #333; }
+    .site-footer { background: #111; color: rgba(255,255,255,.5); text-align: center; padding: 28px 20px; font-size: 13px; }
+    .site-footer strong { color: rgba(255,255,255,.8); }
+    .no-bot-warning { display: none; position: fixed; bottom: 90px; right: 24px; background: #fff3cd; color: #856404; border: 1px solid #ffc107; border-radius: 12px; padding: 14px 18px; font-size: 13px; max-width: 300px; z-index: 9000; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+    @media (max-width:600px) { .hero-nav .links { display:none; } .hero-nav { padding:16px 20px; } .hero { height:380px; } }
+  </style>
+
+  <hr class="fancy" />
+
+  <!-- ── Specialità ─────────────────────────────────────────── -->
+  <div class="section">
+    <p class="section-label">I nostri piatti</p>
+    <h2 class="section-title">Le specialità della casa</h2>
+    <p class="section-desc">Ogni giorno il nostro chef seleziona ingredienti freschi per portarti i sapori più autentici della nostra regione.</p>
+    <div class="dishes-grid">
+      <div class="dish-card">
+        <span class="dish-emoji">🍝</span>
+        <div class="dish-info">
+          <div class="dish-name">Tagliatelle al ragù</div>
+          <div class="dish-desc">Pasta fresca all'uovo con ragù di carne cotto 4 ore</div>
+          <div class="dish-price">€ 14</div>
+        </div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍖</span>
+        <div class="dish-info">
+          <div class="dish-name">Bistecca alla Fiorentina</div>
+          <div class="dish-desc">Chianina IGP, brace di legna, sale Maldon, rosmarino</div>
+          <div class="dish-price">€ 42 / kg</div>
+        </div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🐟</span>
+        <div class="dish-info">
+          <div class="dish-name">Branzino al cartoccio</div>
+          <div class="dish-desc">Branzino selvaggio, olive, capperi, pomodorini datterini</div>
+          <div class="dish-price">€ 22</div>
+        </div>
+      </div>
+      <div class="dish-card">
+        <span class="dish-emoji">🍰</span>
+        <div class="dish-info">
+          <div class="dish-name">Tiramisù della nonna</div>
+          <div class="dish-desc">Ricetta originale, savoiardi artigianali, mascarpone DOP</div>
+          <div class="dish-price">€ 8</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="fancy" />
+
+  <!-- ── Info strip ─────────────────────────────────────────── -->
+  <div class="info-strip">
+    <div class="section">
+      <div>
+        <div class="info-icon">🕐</div>
+        <div class="info-label">Orari</div>
+        <div class="info-value">Mar–Dom: 12:30–15:00<br>19:30–23:00</div>
+      </div>
+      <div>
+        <div class="info-icon">📍</div>
+        <div class="info-label">Dove siamo</div>
+        <div class="info-value">Via Roma 12<br>Milano, MI 20100</div>
+      </div>
+      <div>
+        <div class="info-icon">📞</div>
+        <div class="info-label">Telefono</div>
+        <div class="info-value">+39 02 1234 5678</div>
+      </div>
+      <div>
+        <div class="info-icon">📅</div>
+        <div class="info-label">Prenotazioni</div>
+        <div class="info-value">Online oppure<br>chiedici nella chat!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Recensioni ─────────────────────────────────────────── -->
+  <div class="section">
+    <p class="section-label">Recensioni</p>
+    <h2 class="section-title">Cosa dicono di noi</h2>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Esperienza indimenticabile. La pasta fatta in casa è straordinaria, torneremo sicuramente!"</div>
+        <div class="review-author">— Marco B., Milano</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">"Personale gentilissimo e cucina autentica. Il tiramisù della nonna vale il viaggio da solo."</div>
+        <div class="review-author">— Laura M., Roma</div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <div class="review-text">"Ottima selezione di vini e porzioni generose. L'assistente chat ci ha aiutato a prenotare in pochi secondi!"</div>
+        <div class="review-author">— Giovanni T., Firenze</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <strong>La Bella Tavola</strong> · Via Roma 12, Milano · P.IVA 01234567890<br>
+    <span style="font-size:11px;margin-top:6px;display:block;">Questa è una <strong>pagina di anteprima simulata</strong> generata da <a href="/" style="color:inherit;">GustoAI</a> per testare il tuo chatbot.</span>
+  </footer>
+
+  <!-- ── Avviso se manca botId ───────────────────────────────── -->
+  <div class="no-bot-warning" id="noBotWarning">
+    ⚠️ Nessun <code>botId</code> trovato nell'URL.<br>Torna alla dashboard e usa il pulsante "Prova il tuo bot in anteprima".
+  </div>
+
+  <!-- ── Inject widget dinamicamente ───────────────────────────
+       Legge ?botId= dall'URL e inietta <script data-bot-id="...">
+       così /widget.js riceve l'ID corretto del bot configurato.
+  ──────────────────────────────────────────────────────────── -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var botId  = params.get('botId');
+
+      if (!botId || !/^[a-zA-Z0-9_-]+$/.test(botId)) {
+        document.getElementById('noBotWarning').style.display = 'block';
+        return;
+      }
+
+      var s = document.createElement('script');
+      s.src = '/widget.js';
+      s.setAttribute('data-bot-id', botId);
+      s.async = true;
+      document.body.appendChild(s);
+    })();
+  </script>
+
+</body>
+</html>

@@ -193,6 +193,19 @@
   if (elSaveBtn)   elSaveBtn.addEventListener('click', saveConfig);
   if (elForm)      elForm.addEventListener('submit', saveConfig);
 
+  // -- Anteprima live --
+  var elPreviewBtn = document.getElementById('dbPreviewBtn');
+
+  function openPreview() {
+    if (!botId) {
+      showFeedback('Bot ID non trovato. Accedi tramite il link della tua email di benvenuto.', 'error');
+      return;
+    }
+    window.open('/preview?botId=' + encodeURIComponent(botId), '_blank', 'noopener,noreferrer');
+  }
+
+  if (elPreviewBtn) elPreviewBtn.addEventListener('click', openPreview);
+
   loadConfig();
 
 })();

@@ -62,6 +62,11 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/dashboard.html'));
 });
 
+// ── Anteprima live del chatbot ────────────────────────────────────────────────
+app.get('/preview', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/preview.html'));
+});
+
 // ── Health Check (per Render) ─────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({
   status: 'ok',
