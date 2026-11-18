@@ -7,7 +7,9 @@
   'use strict';
 
   const currentScript = document.currentScript;
-  const BOT_ID  = currentScript?.getAttribute('data-bot-id') || 'demo';
+  const BOT_ID    = currentScript?.getAttribute('data-bot-id') || 'demo';
+  // Modalità anteprima: bypassa il controllo abbonamento (solo per la dashboard)
+  const IS_PREVIEW = currentScript?.getAttribute('data-preview') === 'true';
   // Fallback: origin da cui è stato caricato questo script
   const API_URL = currentScript?.getAttribute('data-api-url')
     || (currentScript?.src ? new URL(currentScript.src).origin : window.location.origin);
@@ -200,8 +202,9 @@
   // ── Init ───────────────────────────────────────────────────────
   async function init() {
     await loadConfig();
-    // Abbonamento non attivo: il widget non viene mostrato sul sito del ristorante
-    if (config.active === false) {
+    // Abbonamento non attivo: il widget non viene mostrato sul sito del ristorante.
+    // In modalità anteprima (dashboard) il controllo viene saltato intenzionalmente.
+    if (config.active === false && !IS_PREVIEW) {
       console.info('[GustoAI] Assistente non attivo per questo sito.');
       return;
     }
