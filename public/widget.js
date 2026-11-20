@@ -212,6 +212,7 @@
 
   // ── Init ───────────────────────────────────────────────────────
   async function init() {
+    injectCSS();
     await loadConfig();
     // Abbonamento non attivo: il widget non viene mostrato sul sito del ristorante.
     // In modalità anteprima (dashboard) il controllo viene saltato intenzionalmente.
