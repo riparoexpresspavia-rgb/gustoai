@@ -27,6 +27,17 @@
   let conversationHistory = [];
   let isOpen = false;
 
+  // ── Inject CSS (se non già presente) ──────────────────────────
+  function injectCSS() {
+    var cssHref = API_URL + '/widget.css';
+    if (!document.querySelector('link[href="' + cssHref + '"]')) {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = cssHref;
+      document.head.appendChild(link);
+    }
+  }
+
   // ── Fetch bot config ───────────────────────────────────────────
   async function loadConfig() {
     try {
